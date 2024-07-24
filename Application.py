@@ -1,6 +1,9 @@
 #Param Thawani
-
-
+import os
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Combine the script directory and the file name to get the full path
+file_path = os.path.join(script_dir, "NotesStorage.txt")
 # Notes class
 class Notes:
     def __init__(self, name, text):
@@ -14,6 +17,42 @@ class Notes:
         self.name = name
     def setText(self, text):
         self.text = text
+#class to store notes across sessions
+class notesStorage:
+    def __init__(self,filePath):
+        self.filePath = filePath
+    def saveNotes(self,Allnotes):
+        self.Allnotes = Allnotes
+        notesAsString = []
+        for y in Allnotes:
+            notesAsString.append(y.getName())
+            notesAsString.append(y.getText())
+        notesAsString
+        with open (self.filePath,'w') as file:
+            fileNumb = 1
+            for i in notesAsString:
+                file.write(i)
+                if(fileNumb!=len(notesAsString)):
+                    file.write(" asdf ")
+                fileNumb += 1
+            file.close()
+    def loadNotes(self):
+        try:
+            with open(file_path,"r") as file:
+                var = file.read()
+        except FileNotFoundError:
+            return -1
+        stringsAsNotes = []
+        stringsAsNotes = var.split(" asdf ")
+        count = 1
+        notesAsStrings = []
+        for j in stringsAsNotes:
+            if(count%2==0):
+                note = Notes(stringsAsNotes[count-2], j)
+                notesAsStrings.append(note)
+            count+=1
+        return notesAsStrings
+
 # User Interface class
 class UI:
     def textInput(self):
@@ -27,6 +66,9 @@ class UI:
     def __init__(self):
         self.allNotes = []
     def textBased(self):
+        store = notesStorage(file_path)
+        if(store.loadNotes()!=-1):
+            self.allNotes = store.loadNotes()
         print("welcome new user!")
         answer = int(input("to write a new note type [1], to edit previous notes type [2], to exit application type [0] "))
         while answer != 0:
@@ -63,7 +105,7 @@ class UI:
                             self.allNotes[selectedNote].setText(newText)
                         elif(whatIsChanging == 3):
                             print("the contents of "+noteName+" are as follows:")
-                            print("\n"+self.allNotes[selectedNote].getText())
+                            print("\n"+self.allNotes[selectedNote].getText()+"\n")
                         elif(whatIsChanging == 5):
                             deleteAsk = input("are you sure you would like to delete note "+str(selectedNote+1)+" ? y/n ")
                             if(deleteAsk == "y"):
@@ -86,6 +128,7 @@ class UI:
                 print("please try again:")
             if(answer!=0):
                 answer = int(input("to write a new note type [1], to edit previous notes type [2], to exit application type [0] "))
+        store.saveNotes(self.allNotes)
         exit()
 # main function
 def main():
