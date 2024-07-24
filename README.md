@@ -5,4 +5,4 @@ A simple python notes app
      When inputing on most parts of the application use the enter key to finalize the response or follow the directions for submitting a response.
 
     This is my first ever python project and I did this to learn the basics of python so that I could use it for my other projects.
-    feel free to send me feedback on your experience!
+feel free to send me feedback on your experience!
